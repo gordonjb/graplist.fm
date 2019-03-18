@@ -6,5 +6,6 @@ Enough is working that I feel happy committing it
 
 Next:
 - put that info into something useful, probably an SQLite database
+- figure out useful schema for that db
 - clean it up a little
-- document some of the weirder bits of BS magic for my own sake. probably just in here. 
+- document some of the weirder bits of BS magic for my own sake. probably just in here.
