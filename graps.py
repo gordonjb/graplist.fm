@@ -7,11 +7,43 @@ from urllib.parse import parse_qs
 from url_loading import simple_get
 import yaml
 from enum import Enum
+import sqlite3
 
 
 class ContentType(Enum):
     WRESTLER = 2
     PROMOTION = 8
+
+
+def create_tables():
+    c.execute('''
+        CREATE TABLE "promotions" (
+            "promotion_id" INT PRIMARY KEY,
+            "name" VARCHAR);
+              ''')
+    c.execute('''
+        CREATE TABLE "shows" (
+            "show_id" INT PRIMARY KEY,
+            "name" VARCHAR,
+            "arena" VARCHAR,
+            "show_date" DATE,
+            "promotion" INT,
+            FOREIGN KEY ("promotion") REFERENCES
+                "promotions" ("promotion_id"));
+              ''')
+    c.execute('''
+        CREATE TABLE "workers" (
+            "worker_id" VARCHAR PRIMARY KEY,
+            "name" VARCHAR);
+              ''')
+    c.execute('''
+        CREATE TABLE "appearances" (
+            "worker_id" VARCHAR,
+            "show_id" INT,
+            FOREIGN KEY ("worker_id") REFERENCES "workers" ("worker_id"),
+            FOREIGN KEY ("show_id") REFERENCES "shows" ("show_id"));
+              ''')
+
 
 def parse_results(url):
     """
@@ -97,4 +129,7 @@ def main():
         parse_workers(show)
 
 
+conn = sqlite3.connect('thedatabase.sqlite3', check_same_thread=False)
+c = conn.cursor()
+create_tables()
 main()
