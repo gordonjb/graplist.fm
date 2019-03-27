@@ -19,5 +19,6 @@ To add shows to the list that will be considered, add a new line containing the 
 ```
 
 # """"Roadmap""""
-- Add a way to include shows not on Cagematch. Probably some method to load YAML from a file or directory that includes the metadata we need
+- Add a way to include shows not on Cagematch. Probably some method to load YAML from a file or directory that includes the metadata we need.
+- I'm pretty confident initially that this will be a locally run thing, requiring Python etc. I'd like to get it to a place where it's something online, or at least something you just need to dump a list of shows into.
 - Your request could go here!
