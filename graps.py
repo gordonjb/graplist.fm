@@ -8,6 +8,7 @@ from url_loading import simple_get
 import yaml
 from enum import Enum
 import sqlite3
+from datetime import date
 
 
 class ContentType(Enum):
@@ -43,6 +44,44 @@ def create_tables():
             FOREIGN KEY ("worker_id") REFERENCES "workers" ("worker_id"),
             FOREIGN KEY ("show_id") REFERENCES "shows" ("show_id"));
               ''')
+    conn.commit()
+
+
+def add_promotion(promotion_id, promotion_text):
+    """
+    Inserts the specified promotion into the promotion table.
+    """
+    c.execute('''INSERT OR IGNORE INTO promotions(promotion_id, name)
+                 VALUES(?,?)''', (promotion_id, promotion_text))
+    conn.commit()
+
+
+def add_show(show_id, show_name, arena, date, promotion_id):
+    """
+    Inserts the specified show into the shows table.
+    """
+    c.execute('''INSERT OR IGNORE INTO shows(show_id, name, arena, show_date, promotion)
+                 VALUES(?,?,?,?,?)''',
+              (show_id, show_name, arena, date, promotion_id))
+    conn.commit()
+
+
+def add_worker(worker_id, worker_name):
+    """
+    Inserts the specified worker into the workers table.
+    """
+    c.execute('''INSERT OR IGNORE INTO workers(worker_id, name)
+                 VALUES(?,?)''', (worker_id, worker_name))
+    conn.commit()
+
+
+def add_appearance(worker_id, show_id):
+    """
+    Inserts the specified worker and show pair into the appearances table.
+    """
+    c.execute('''INSERT INTO appearances(worker_id, show_id)
+                 VALUES(?,?)''', (worker_id, show_id))
+    conn.commit()
 
 
 def parse_results(url):
@@ -80,45 +119,53 @@ def parse_workers(url):
     if raw_html is not None:
         html = BeautifulSoup(raw_html, 'html.parser')
         showTable = html.find("div", {"class": "InformationBoxTable"})
-        print(showTable.prettify())
         keys = [span.get_text() for span in showTable.find_all("div", {"class": "InformationBoxTitle"})]
         values = [span.contents[0] for span in showTable.find_all("div", {"class": "InformationBoxContents"})]
         dictionary = dict(zip(keys, values))
 
         bits = urlparse(url)
-        parsedBits = parse_qs(bits.query)
-        showId = parsedBits.get('nr')[0]
+        parsed_bits = parse_qs(bits.query)
+        show_id = parsed_bits.get('nr')[0]
         arena = dictionary["Arena:"].get_text()
-        date = dictionary["Date:"].get_text()
-        showName = dictionary["Name of the event:"]
+        date_str = dictionary["Date:"].get_text()
+        dd, mm, yy = date_str.split(".")
+        date_obj = date(int(yy), int(mm), int(dd))
+        show_name = dictionary["Name of the event:"]
         promotion = dictionary["Promotion:"]
         if promotion is not None:
             bits = urlparse(promotion.attrs['href'])
-            parsedBits = parse_qs(bits.query)
-            linkType = int(parsedBits.get('id')[0])
-            if ContentType(linkType) is ContentType.PROMOTION:
-                promotionId = int(parsedBits.get('nr')[0])
-                print("#" + str(promotionId) + ", " + promotion.text)
+            parsed_bits = parse_qs(bits.query)
+            link_type = int(parsed_bits.get('id')[0])
+            if ContentType(link_type) is ContentType.PROMOTION:
+                promotion_id = int(parsed_bits.get('nr')[0])
+                add_promotion(promotion_id, promotion.text)
         else:
             print("#" + str(-1) + ", " + promotion)
 
+        add_show(show_id, show_name, arena, date_obj, promotion_id)
+
         all_workers = html.find("div", {"class": "Comments Font9"})
-        # print(u''.join(str(item) for item in all_workers))
-        # worker_list = ("".join(all_workers.contents)).split(",")
         worker_list = (u''.join(str(item) for item in all_workers)).split(",")
         for worker in worker_list:
+            print("\'" + worker + "\'")
+            worker_id = None
+            worker_name = None
             worker_soup = BeautifulSoup(worker, 'html.parser')
             profile_link = worker_soup.find('a')
             if profile_link is not None:
                 bits = urlparse(profile_link.attrs['href'])
-                parsedBits = parse_qs(bits.query)
-                linkType = int(parsedBits.get('id')[0])
-                if linkType == 2:
-                    workerId = int(parsedBits.get('nr')[0])
-                    print("#" + str(workerId) + ", " + profile_link.text)
+                parsed_bits = parse_qs(bits.query)
+                link_type = int(parsed_bits.get('id')[0])
+                if link_type == 2:
+                    worker_id = int(parsed_bits.get('nr')[0])
+                    worker_name = profile_link.text
             else:
-                print("#" + str(-1) + ", " + worker)
-            print("--------------------")
+                worker_id = worker.strip()
+                worker_name = worker.strip()
+
+            if worker_id is not None:
+                add_worker(worker_id, worker_name)
+                add_appearance(worker_id, show_id)
 
 
 def main():
