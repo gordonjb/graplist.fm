@@ -18,6 +18,6 @@ To add shows to the list that will be considered, add a new line containing the 
 # This link will be ignored, for example: https://www.cagematch.net/?id=1&nr=226480
 ```
 
-# TODO
+# """"Roadmap""""
 - Add a way to include shows not on Cagematch. Probably some method to load YAML from a file or directory that includes the metadata we need
 - Your request could go here!
