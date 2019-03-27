@@ -1,3 +1,19 @@
+# 27/03/19
+All the details that I was extracting previously now get put into a database 👍
+
+Next:
+- Figure out how to deal with duplicates. Currently any duplicate workers, shows, or promotions are skipped. For workers, we really want to check if their ID exists, and if it does, append the gimmick name to the "name" field if it's not already in there. This could be a "nice to have" though.
+- Figure out how to deal with multiple runs. In an ideal world, we shouldn't have to drop the database between runs, we should figure out which shows are loaded already and not re-add them. We also try to create the tables each run.
+- Start doing some web stuff/graphing! Well, at least figure out the SQL for getting the data for those.
+
+Still To Do:
+- maybe extract the schema to a .sql file?
+- clean it up a little
+- document some of the weirder bits of BS magic for my own sake. probably just in here.
+
+# 26/03/19
+Added method to create table schema
+
 # 17/03/19
 Enough is working that I feel happy committing it
 - Reads shows from YAML file
