@@ -7,6 +7,7 @@ The DataFrames are then fed into two simple pie charts to display the data!
 Next:
 - Pretty up the webpage
 - Fill out my shows.yaml so we've got a more representative data set
+- How do we handle multiple promotion shows? I should test that.
 
 Still To Do:
 - Figure out how to deal with duplicates. Currently any duplicate workers, shows, or promotions are skipped. For workers, we really want to check if their ID exists, and if it does, append the gimmick name to the "name" field if it's not already in there. This could be a "nice to have" though.
