@@ -18,6 +18,11 @@ To add shows to the list that will be considered, add a new line containing the 
 # This link will be ignored, for example: https://www.cagematch.net/?id=1&nr=226480
 ```
 
+My personal shows.yaml is in the repo, for comparison: [shows.yaml](shows.yaml)
+
+# TODO list/Work Log
+[A project diary of sorts, with notes and a TODO list, is located in the repo here](TODOLog.md).
+
 # """"Roadmap""""
 - Add a way to include shows not on Cagematch. Probably some method to load YAML from a file or directory that includes the metadata we need.
 - I'm pretty confident initially that this will be a locally run thing, requiring Python etc. I'd like to get it to a place where it's something online, or at least something you just need to dump a list of shows into.
