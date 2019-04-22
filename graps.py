@@ -29,6 +29,7 @@ def create_tables():
             "arena" VARCHAR,
             "show_date" DATE,
             "promotion" INT,
+            "url" VARCHAR,
             FOREIGN KEY ("promotion") REFERENCES
                 "promotions" ("promotion_id"));
               ''')
@@ -56,13 +57,13 @@ def add_promotion(promotion_id, promotion_text):
     conn.commit()
 
 
-def add_show(show_id, show_name, arena, date, promotion_id):
+def add_show(show_id, show_name, arena, date, promotion_id, url):
     """
     Inserts the specified show into the shows table.
     """
-    c.execute('''INSERT OR IGNORE INTO shows(show_id, name, arena, show_date, promotion)
-                 VALUES(?,?,?,?,?)''',
-              (show_id, show_name, arena, date, promotion_id))
+    c.execute('''INSERT OR IGNORE INTO shows(show_id, name, arena, show_date, promotion, url)
+                 VALUES(?,?,?,?,?,?)''',
+              (show_id, show_name, arena, date, promotion_id, url))
     conn.commit()
 
 
@@ -142,7 +143,7 @@ def parse_workers(url):
         else:
             print("#" + str(-1) + ", " + promotion)
 
-        add_show(show_id, show_name, arena, date_obj, promotion_id)
+        add_show(show_id, show_name, arena, date_obj, promotion_id, url)
 
         all_workers = html.find("div", {"class": "Comments Font9"})
         worker_list = (u''.join(str(item) for item in all_workers)).split(",")
