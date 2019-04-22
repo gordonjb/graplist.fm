@@ -19,29 +19,29 @@ class ContentType(Enum):
 def create_tables():
     c.execute('''
         CREATE TABLE "promotions" (
-            "promotion_id" INT PRIMARY KEY,
-            "name" VARCHAR);
+            "promotion_id" INTEGER PRIMARY KEY,
+            "name" TEXT);
               ''')
     c.execute('''
         CREATE TABLE "shows" (
-            "show_id" INT PRIMARY KEY,
-            "name" VARCHAR,
-            "arena" VARCHAR,
-            "show_date" DATE,
-            "promotion" INT,
-            "url" VARCHAR,
+            "show_id" INTEGER PRIMARY KEY,
+            "name" TEXT,
+            "arena" TEXT,
+            "show_date" TEXT,
+            "promotion" INTEGER,
+            "url" TEXT,
             FOREIGN KEY ("promotion") REFERENCES
                 "promotions" ("promotion_id"));
               ''')
     c.execute('''
         CREATE TABLE "workers" (
-            "worker_id" VARCHAR PRIMARY KEY,
-            "name" VARCHAR);
+            "worker_id" TEXT PRIMARY KEY,
+            "name" TEXT);
               ''')
     c.execute('''
         CREATE TABLE "appearances" (
-            "worker_id" VARCHAR,
-            "show_id" INT,
+            "worker_id" TEXT,
+            "show_id" INTEGER,
             FOREIGN KEY ("worker_id") REFERENCES "workers" ("worker_id"),
             FOREIGN KEY ("show_id") REFERENCES "shows" ("show_id"));
               ''')
