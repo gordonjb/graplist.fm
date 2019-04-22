@@ -6,6 +6,8 @@ MDK
 from requests import get
 from requests.exceptions import RequestException
 from contextlib import closing
+import requests_cache
+
 
 def simple_get(url):
     """
@@ -15,6 +17,7 @@ def simple_get(url):
     """
     try:
         with closing(get(url, stream=True)) as resp:
+            print("URL: {0} / Used Cache: {1}".format(url, resp.from_cache))
             if is_good_response(resp):
                 return resp.content
             else:
@@ -42,3 +45,6 @@ def log_error(e):
     make it do anything.
     """
     print(e)
+
+
+requests_cache.install_cache(cache_name='cagematch_cache', backend='sqlite')

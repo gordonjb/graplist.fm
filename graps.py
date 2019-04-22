@@ -9,6 +9,7 @@ import yaml
 from enum import Enum
 import sqlite3
 from datetime import date
+import argparse
 
 
 class ContentType(Enum):
@@ -148,7 +149,8 @@ def parse_workers(url):
         all_workers = html.find("div", {"class": "Comments Font9"})
         worker_list = (u''.join(str(item) for item in all_workers)).split(",")
         for worker in worker_list:
-            print("\'" + worker + "\'")
+            if args.verbose:
+                print("Scraped worker being parsed: \'" + worker + "\'")
             worker_id = None
             worker_name = None
             worker_soup = BeautifulSoup(worker, 'html.parser')
@@ -170,12 +172,21 @@ def parse_workers(url):
 
 
 def main():
-    with open("shows.yaml", 'r') as yamlfile:
+    with open(args.filename, 'r') as yamlfile:
         shows = yaml.safe_load(yamlfile)
 
     for show in shows:
         parse_workers(show)
 
+
+parser = argparse.ArgumentParser(description='Scrape and parse a list of shows')
+parser.add_argument("-f", "--file", dest="filename",
+                    help="file to be loaded", metavar="FILE",
+                    default="shows.yaml")
+parser.add_argument("-v", "--verbose", dest="verbose",
+                    help="output more info about what's being parsed",
+                    action="store_true")
+args = parser.parse_args()
 
 conn = sqlite3.connect('thedatabase.sqlite3', check_same_thread=False)
 c = conn.cursor()
