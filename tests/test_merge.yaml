@@ -10,7 +10,7 @@
 - squash:
     - https://www.cagematch.net/?id=1&nr=94826 # WWE Monday Night RAW #1039
     - https://www.cagematch.net/?id=1&nr=95125 # WWE Superstars #211
-- squash:
+- merge:
     - https://www.cagematch.net/?id=1&nr=94859 # WWE Friday Night SmackDown #714
     - https://www.cagematch.net/?id=1&nr=94858 # WWE Main Event #30
 # June 2013
@@ -20,6 +20,6 @@
 # March 2014
 - https://www.cagematch.net/?id=1&nr=104809 # RevPro High Stakes 2014
 # May 2014
-- squash:
+- taping:
     - https://www.cagematch.net/?id=1&nr=111347 # WWE Friday Night SmackDown #770
     - https://www.cagematch.net/?id=1&nr=111345 # WWE Main Event #86
