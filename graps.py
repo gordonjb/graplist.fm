@@ -110,65 +110,68 @@ def parse_results(url):
             print("--------------------")
 
 
-def parse_workers(url):
+def parse_entry(url):
+    raw_html = simple_get(url)
+    if raw_html is not None:
+        parse_workers(raw_html)
+
+def parse_workers(raw_html):
     """
     Tries to extract wrestler info by parsing the 'Comments Font9' div
     (All Workers).
     The content is split on commas, and then the ID is fetched from each item
     if present.
     """
-    raw_html = simple_get(url)
-    if raw_html is not None:
-        html = BeautifulSoup(raw_html, 'html.parser')
-        showTable = html.find("div", {"class": "InformationBoxTable"})
-        keys = [span.get_text() for span in showTable.find_all("div", {"class": "InformationBoxTitle"})]
-        values = [span.contents[0] for span in showTable.find_all("div", {"class": "InformationBoxContents"})]
-        dictionary = dict(zip(keys, values))
+    html = BeautifulSoup(raw_html, 'html.parser')
+    showTable = html.find("div", {"class": "InformationBoxTable"})
+    keys = [span.get_text() for span in showTable.find_all("div", {"class": "InformationBoxTitle"})]
+    values = [span.contents[0] for span in showTable.find_all("div", {"class": "InformationBoxContents"})]
+    dictionary = dict(zip(keys, values))
 
-        bits = urlparse(url)
+    bits = urlparse(url)
+    parsed_bits = parse_qs(bits.query)
+    show_id = parsed_bits.get('nr')[0]
+    arena = dictionary["Arena:"].get_text()
+    date_str = dictionary["Date:"].get_text()
+    dd, mm, yy = date_str.split(".")
+    date_obj = date(int(yy), int(mm), int(dd))
+    show_name = dictionary["Name of the event:"]
+    promotion = dictionary["Promotion:"]
+    if promotion is not None:
+        bits = urlparse(promotion.attrs['href'])
         parsed_bits = parse_qs(bits.query)
-        show_id = parsed_bits.get('nr')[0]
-        arena = dictionary["Arena:"].get_text()
-        date_str = dictionary["Date:"].get_text()
-        dd, mm, yy = date_str.split(".")
-        date_obj = date(int(yy), int(mm), int(dd))
-        show_name = dictionary["Name of the event:"]
-        promotion = dictionary["Promotion:"]
-        if promotion is not None:
-            bits = urlparse(promotion.attrs['href'])
+        link_type = int(parsed_bits.get('id')[0])
+        if ContentType(link_type) is ContentType.PROMOTION:
+            promotion_id = int(parsed_bits.get('nr')[0])
+            add_promotion(promotion_id, promotion.text)
+    else:
+        print("#" + str(-1) + ", " + promotion)
+
+    add_show(show_id, show_name, arena, date_obj, promotion_id, url)
+
+    all_workers = html.find("div", {"class": "Comments Font9"})
+    worker_list = (u''.join(str(item) for item in all_workers)).split(",")
+    for worker in worker_list:
+        if args.verbose:
+            print("Scraped worker being parsed: \'" + worker + "\'")
+        worker_id = None
+        worker_name = None
+        worker_soup = BeautifulSoup(worker, 'html.parser')
+        profile_link = worker_soup.find('a')
+        if profile_link is not None:
+            bits = urlparse(profile_link.attrs['href'])
             parsed_bits = parse_qs(bits.query)
             link_type = int(parsed_bits.get('id')[0])
-            if ContentType(link_type) is ContentType.PROMOTION:
-                promotion_id = int(parsed_bits.get('nr')[0])
-                add_promotion(promotion_id, promotion.text)
+            if link_type == 2:
+                worker_id = int(parsed_bits.get('nr')[0])
+                worker_name = profile_link.text
         else:
-            print("#" + str(-1) + ", " + promotion)
+            worker_id = worker.strip()
+            worker_name = worker.strip()
 
-        add_show(show_id, show_name, arena, date_obj, promotion_id, url)
-
-        all_workers = html.find("div", {"class": "Comments Font9"})
-        worker_list = (u''.join(str(item) for item in all_workers)).split(",")
-        for worker in worker_list:
-            if args.verbose:
-                print("Scraped worker being parsed: \'" + worker + "\'")
-            worker_id = None
-            worker_name = None
-            worker_soup = BeautifulSoup(worker, 'html.parser')
-            profile_link = worker_soup.find('a')
-            if profile_link is not None:
-                bits = urlparse(profile_link.attrs['href'])
-                parsed_bits = parse_qs(bits.query)
-                link_type = int(parsed_bits.get('id')[0])
-                if link_type == 2:
-                    worker_id = int(parsed_bits.get('nr')[0])
-                    worker_name = profile_link.text
-            else:
-                worker_id = worker.strip()
-                worker_name = worker.strip()
-
-            if worker_id is not None:
-                add_worker(worker_id, worker_name)
-                add_appearance(worker_id, show_id)
+        if worker_id is not None:
+            add_worker(worker_id, worker_name)
+            add_appearance(worker_id, show_id)
 
 
 def main():
@@ -176,7 +179,7 @@ def main():
         shows = yaml.safe_load(yamlfile)
 
     for show in shows:
-        parse_workers(show)
+        parse_entry(show)
 
 
 parser = argparse.ArgumentParser(description='Scrape and parse a list of shows')
