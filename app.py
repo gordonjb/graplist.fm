@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 import dash
+import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_table
+from dash.dependencies import Input, Output
+
 import plotly.graph_objs as go
 
 import sqlite3
@@ -23,12 +27,12 @@ class Streak:
                 + self.end['show_year'])
 
 
-def streak_continues(last, row):
-    ly = int(last['show_year'])
-    lm = int(last['show_month'])
-    ry = int(row['show_year'])
-    rm = int(row['show_month'])
-    return ((lm == rm - 1) or (lm == 12 and rm == 1 and ly == ry - 1))
+def streak_continues(last_row, current_row):
+    ly = int(last_row['show_year'])
+    lm = int(last_row['show_month'])
+    ry = int(current_row['show_year'])
+    rm = int(current_row['show_month'])
+    return (lm == rm - 1) or (lm == 12 and rm == 1 and ly == ry - 1)
 
 
 def is_streak_ongoing(streak):
@@ -46,13 +50,22 @@ def is_streak_ongoing(streak):
         return False
 
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED])
 
 conn = sqlite3.connect('thedatabase.sqlite3', check_same_thread=False)
 c = conn.cursor()
-appearances_df = pandas.read_sql_query('SELECT name, count(appearances.worker_id) AS \'appearances\' FROM appearances INNER JOIN workers on workers.worker_id = appearances.worker_id GROUP by appearances.worker_id', conn)
+
+worker_count_query = "SELECT Count() FROM %s" % "workers"
+c.execute(worker_count_query)
+worker_count = c.fetchone()[0]
+promotion_count_query = "SELECT Count() FROM %s" % "promotions"
+c.execute(promotion_count_query)
+promotion_count = c.fetchone()[0]
+show_count_query = "SELECT Count() FROM %s" % "shows"
+c.execute(show_count_query)
+show_count = c.fetchone()[0]
+
+appearances_df = pandas.read_sql_query('SELECT name, count(appearances.worker_id) AS \'appearances\' FROM appearances INNER JOIN workers on workers.worker_id = appearances.worker_id GROUP by appearances.worker_id  ORDER BY appearances DESC', conn)
 shows_df = pandas.read_sql_query('SELECT promotions.name, count(shows.promotion) AS \'att_shows\' FROM shows INNER JOIN promotions on promotions.promotion_id = shows.promotion GROUP by shows.promotion', conn)
 year_counter_df = pandas.read_sql_query('SELECT strftime(\'%Y\', show_date) AS show_year, count(show_id) AS show_count FROM shows GROUP BY show_year', conn)
 split_year_counter_df = pandas.read_sql_query('SELECT strftime(\'%Y\', show_date) AS show_year, promotions.name FROM shows INNER JOIN promotions on promotions.promotion_id = shows.promotion', conn)
@@ -94,44 +107,17 @@ if latest_streak.count >= longest_streak.count:
     longest_streak = latest_streak
 current_streak = is_streak_ongoing(latest_streak)
 
-streak_ps = []
+streak_string =""
 if current_streak:
-    streak_ps.append(html.P('You\'re on a ', style={'color': 'blue', 'fontSize': 14}))
-    streak_ps.append(html.P(str(latest_streak.count), style={'color': 'black', 'fontSize': 16}))
-    streak_ps.append(html.P(' month streak of at least one show per month!', style={'color': 'blue', 'fontSize': 14}))
+    streak_string = "You're on a " + str(latest_streak.count) + " month streak of at least one show per month!"
 
-streak_ps.append(html.P('Your longest streak was ', style={'color': 'blue', 'fontSize': 14}))
-streak_ps.append(html.P(longest_streak.count, style={'color': 'black', 'fontSize': 14}))
-streak_ps.append(html.P(' months of at least one show per month, between ' + str(longest_streak), style={'color': 'blue', 'fontSize': 14}))
+longest_streak_string = "Your longest streak was " + str(longest_streak.count) + " months of at least one show per month, between " + str(longest_streak)
 
-app.layout = html.Div(children=[
-    html.H1(children='graplist.fm', style={'fontFamily': 'Roboto Condensed'}),
+top_page_size = 10
 
-    html.Div(streak_ps),
 
-    dcc.Graph(
-        id='appearances-pie',
-        figure=go.Figure(
-            data=[go.Pie(labels=appearances_df['name'],
-                         values=appearances_df['appearances'])],
-            layout=go.Layout(
-                title='Appearances'
-            )
-        )
-    ),
-
-    dcc.Graph(
-        id='shows-pie',
-        figure=go.Figure(
-            data=[go.Pie(labels=shows_df['name'],
-                         values=shows_df['att_shows'])],
-            layout=go.Layout(
-                title='Shows'
-            )
-        )
-    ),
-
-    dcc.Graph(
+def shows_per_year_graph():
+    return dcc.Graph(
         id='shows-per-year',
         figure=go.Figure(
             data=[go.Bar(x=year_counter_df['show_year'],
@@ -140,9 +126,11 @@ app.layout = html.Div(children=[
                 title='Shows/year'
             )
         )
-    ),
+    )
 
-    dcc.Graph(
+
+def shows_per_year_stacked_graph():
+    return dcc.Graph(
         id='shows-per-year-stacked',
         figure=go.Figure(
             data=shows_per_year_series,
@@ -151,7 +139,175 @@ app.layout = html.Div(children=[
             )
         )
     )
-])
+
+
+def shows_pie_chart():
+    return dcc.Graph(
+        id='shows-pie',
+        figure=go.Figure(
+            data=[go.Pie(labels=shows_df['name'],
+                         values=shows_df['att_shows'],
+                         textinfo="none")],
+            layout=go.Layout(
+                margin=dict(t=50)
+            )
+        ),
+        config={
+            'displayModeBar': False
+        }
+    )
+
+
+def appearances_pie_chart():
+    return dcc.Graph(
+        id='appearances-pie',
+        figure=go.Figure(
+            data=[go.Pie(labels=appearances_df['name'],
+                         values=appearances_df['appearances'])],
+            layout=go.Layout(
+                title='Appearances'
+            )
+        )
+    )
+
+
+def top_wrestlers_table():
+    return dash_table.DataTable(
+        id='top-wrestlers',
+        columns=[
+            {"name": i, "id": i} for i in appearances_df.columns
+        ],
+        page_current=0,
+        page_size=top_page_size,
+        page_action='custom'
+)
+
+
+def top_promotions_table():
+    return dash_table.DataTable(
+        id='top-promotions',
+        columns=[
+            {"name": i, "id": i} for i in sorted(year_name_count_df.columns)
+        ],
+        page_current=0,
+        page_size=top_page_size,
+        page_action='custom'
+    )
+
+
+navbar = dbc.NavbarSimple(
+    children=[
+        dbc.NavItem(dbc.NavLink("Link", href="#")),
+        dbc.DropdownMenu(
+            nav=True,
+            in_navbar=True,
+            label="Menu",
+            children=[
+                dbc.DropdownMenuItem("Entry 1"),
+                dbc.DropdownMenuItem("Entry 2"),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("Entry 3"),
+            ],
+        ),
+    ],
+    brand="graplist.fm",
+    brand_href="#",
+    sticky="top",
+)
+
+body = dbc.Container(
+    [
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.H2(str(worker_count), style={'text-align': 'center'}),
+                        html.H2("Wrestlers", style={'text-align': 'center'}),
+                    ],
+                ),
+                dbc.Col(
+                    [
+                        html.H2("You've seen", style={'text-align': 'center'}),
+                        html.H2(str(show_count), style={'text-align': 'center'}),
+                        html.H2("shows!", style={'text-align': 'center'}),
+
+                    ],
+                ),
+                dbc.Col(
+                    [
+                        html.H2(str(promotion_count), style={'text-align': 'center'}),
+                        html.H2("promotions", style={'text-align': 'center'}),
+                    ],
+                ),
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.H4(streak_string, style={'text-align': 'center'}),
+                        html.H4(longest_streak_string, style={'text-align': 'center'}),
+                    ]
+                ),
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.H5("Top Wrestlers seen", style={'text-align': 'center'}),
+                        top_wrestlers_table(),
+                    ]
+                ),
+                dbc.Col(
+                    [
+                        html.H5("Top Promotions seen", style={'text-align': 'center'}),
+                        shows_pie_chart(),
+                    ]
+                ),
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        top_promotions_table(),
+                    ]
+                ),
+                dbc.Col(
+                    [
+                        shows_per_year_graph(),
+                    ]
+                ),
+            ]
+        )
+    ],
+    className="mt-4",
+    fluid=True,
+)
+
+app.layout = html.Div([navbar, body])
+
+
+@app.callback(
+    Output('top-wrestlers', 'data'),
+    [Input('top-wrestlers', "page_current"),
+     Input('top-wrestlers', "page_size")])
+def update_table(page_current,page_size):
+    return appearances_df.iloc[
+        page_current*page_size:(page_current+ 1)*page_size
+    ].to_dict('records')
+
+
+@app.callback(
+    Output('top-promotions', 'data'),
+    [Input('top-promotions', "page_current"),
+     Input('top-promotions', "page_size")])
+def update_table(page_current,page_size):
+    return year_name_count_df.iloc[
+        page_current*page_size:(page_current+ 1)*page_size
+    ].to_dict('records')
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

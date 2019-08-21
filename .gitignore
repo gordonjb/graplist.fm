@@ -102,3 +102,10 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# ide
+.idea/
+
+# Databases
+thedatabase.sqlite3
+cagematch_cache.sqlite
