@@ -11,9 +11,9 @@ beautifulsoup4 = "*"
 pyyaml = "*"
 dash = "*"
 dash-daq = "*"
-werkzeug = "==0.14.1"
 pandas = "*"
 requests-cache = "*"
+dash-bootstrap-components = "*"
 
 [requires]
 python_version = "3.6"
