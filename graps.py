@@ -21,7 +21,8 @@ def create_tables():
     c.execute('''
         CREATE TABLE "promotions" (
             "promotion_id" INTEGER PRIMARY KEY,
-            "name" TEXT);
+            "name" TEXT,
+            "short_name" TEXT);
               ''')
     c.execute('''
         CREATE TABLE "shows" (
@@ -49,12 +50,12 @@ def create_tables():
     conn.commit()
 
 
-def add_promotion(promotion_id, promotion_text):
+def add_promotion(promotion_id, promotion_text, promotion_short):
     """
     Inserts the specified promotion into the promotion table.
     """
-    c.execute('''INSERT OR IGNORE INTO promotions(promotion_id, name)
-                 VALUES(?,?)''', (promotion_id, promotion_text))
+    c.execute('''INSERT OR IGNORE INTO promotions(promotion_id, name, short_name)
+                 VALUES(?,?,?)''', (promotion_id, promotion_text, promotion_short))
     conn.commit()
 
 
