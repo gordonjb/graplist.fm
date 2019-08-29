@@ -7,6 +7,8 @@ import dash_table
 from dash.dependencies import Input, Output
 
 import plotly.graph_objs as go
+import plotly.figure_factory as ff
+import _annotated_heatmap
 
 import sqlite3
 import pandas
@@ -36,15 +38,15 @@ def streak_continues(last_row, current_row):
 
 
 def is_streak_ongoing(streak):
-    currentMonth = datetime.now().month
-    currentYear = datetime.now().year
-    longestMonth = int(streak.end['show_month'])
-    longestYear = int(streak.end['show_year'])
-    if longestMonth == currentMonth and longestYear == currentYear:
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    longest_month = int(streak.end['show_month'])
+    longest_year = int(streak.end['show_year'])
+    if longest_month == current_month and longest_year == current_year:
         return True
-    elif longestMonth == (currentMonth - 1) and longestYear == (currentYear - 1):
+    elif longest_month == (current_month - 1) and longest_year == (current_year - 1):
         return True
-    elif longestMonth == 12 and currentMonth == 1 and longestYear == (currentYear -1):
+    elif longest_month == 12 and current_month == 1 and longest_year == (current_year -1):
         return True
     else:
         return False
@@ -70,6 +72,7 @@ shows_df = pandas.read_sql_query('SELECT promotions.name, count(shows.promotion)
 year_counter_df = pandas.read_sql_query('SELECT strftime(\'%Y\', show_date) AS show_year, count(show_id) AS show_count FROM shows GROUP BY show_year', conn)
 split_year_counter_df = pandas.read_sql_query('SELECT strftime(\'%Y\', show_date) AS show_year, promotions.name FROM shows INNER JOIN promotions on promotions.promotion_id = shows.promotion', conn)
 year_name_count_df = pandas.read_sql_query('SELECT strftime(\'%Y\', shows.show_date) AS show_year, promotions.name, count(promotions.promotion_id) AS show_count FROM shows INNER JOIN promotions on promotions.promotion_id = shows.promotion GROUP BY show_year, promotions.name', conn)
+shows_heatmap_df = pandas.read_sql_query('SELECT strftime(\'%m\', shows.show_date) AS show_month, strftime(\'%Y\', shows.show_date) AS show_year, COUNT(*) AS show_number FROM shows GROUP BY show_year, show_month ORDER BY show_year ASC, show_month ASC', conn)
 
 shows_per_year_series = []
 grouped = year_name_count_df.groupby(['name'])
@@ -195,6 +198,54 @@ def top_promotions_table():
     )
 
 
+def shows_heatmap():
+    months = ['January', 'February', 'March', 'April', 'May', 'June',
+              'July', 'August', 'September', 'October', 'November', 'December']
+    years = []
+    last_year = 0
+    shows = []
+    yr = [None] * 12
+    for i, r in shows_heatmap_df.iterrows():
+        if int(r['show_year']) == last_year or last_year == 0:
+            pass
+        else:
+            shows.append(yr)
+            years.append(last_year)
+            new_year = int(r['show_year'])
+            last_year += 1
+            while last_year < new_year:
+                years.append(last_year)
+                shows.append([None] * 12)
+                last_year += 1
+            yr = [None] * 12
+
+        show_m_int = int(r['show_month'])
+        yr[(show_m_int - 1)] = r['show_number']
+        last_year = int(r['show_year'])
+    shows.append(yr)
+    years.append(last_year)
+
+    fig = _annotated_heatmap.create_annotated_heatmap(z=shows,
+                             y=years,
+                             x=months,
+                             xgap=5,
+                             ygap=5,
+                             hoverinfo="none",
+                             connectgaps=False,
+                             colorscale='Viridis')
+    fig.layout.update(go.Layout(
+                title='Number of events per year and month',
+                yaxis=dict(autorange='reversed',
+                           tickmode='linear',
+                           showgrid=False),
+                xaxis=dict(showgrid=False)
+    ))
+    return dcc.Graph(
+        id='shows-heatmap',
+        figure=fig
+    )
+
+
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Link", href="#")),
@@ -263,6 +314,15 @@ body = dbc.Container(
                     [
                         html.H5("Top Promotions seen", style={'text-align': 'center'}),
                         shows_pie_chart(),
+                    ]
+                ),
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        shows_heatmap(),
                     ]
                 ),
             ]
