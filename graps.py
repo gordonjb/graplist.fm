@@ -147,7 +147,11 @@ def parse_workers(url):
         add_show(show_id, show_name, arena, date_obj, promotion_id, url)
 
         all_workers = html.find("div", {"class": "Comments Font9"})
-        worker_list = (u''.join(str(item) for item in all_workers)).split(",")
+        if all_workers is not None:
+            joined = u''.join(str(item) for item in all_workers)
+            worker_list = joined.split(",")
+        else:
+            worker_list = []
         for worker in worker_list:
             if args.verbose:
                 print("Scraped worker being parsed: \'" + worker + "\'")
