@@ -10,6 +10,7 @@ from enum import Enum
 import sqlite3
 from datetime import date
 import argparse
+import re
 
 
 class ContentType(Enum):
@@ -110,6 +111,15 @@ def parse_results(url):
             print("--------------------")
 
 
+def not_one_off(worker_name, bs_html):
+    divs = bs_html.find("div", {"class": "Matches"})
+    for div in divs:
+        result = div.find("div", {"class": "MatchResults"})
+        if re.search(worker_name + "(( \(([c\)]|[w\/]))|( [^(])|$)", result.text.strip()):
+            return True
+
+    return False
+
 def parse_workers(url):
     """
     Tries to extract wrestler info by parsing the 'Comments Font9' div
@@ -163,8 +173,10 @@ def parse_workers(url):
                     worker_id = int(parsed_bits.get('nr')[0])
                     worker_name = profile_link.text
             else:
-                worker_id = worker.strip()
-                worker_name = worker.strip()
+                plain_text_name = worker.strip()
+                if not_one_off(plain_text_name, html):
+                    worker_id = plain_text_name
+                    worker_name = plain_text_name
 
             if worker_id is not None:
                 add_worker(worker_id, worker_name)
