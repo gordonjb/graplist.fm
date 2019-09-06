@@ -74,7 +74,8 @@ def create_tables():
             "worker_id" TEXT,
             "show_id" TEXT,
             FOREIGN KEY ("worker_id") REFERENCES "workers" ("worker_id"),
-            FOREIGN KEY ("show_id") REFERENCES "shows" ("show_id"));
+            FOREIGN KEY ("show_id") REFERENCES "shows" ("show_id"),
+            UNIQUE("worker_id", "show_id"));
               ''')
     conn.commit()
 
@@ -111,7 +112,7 @@ def add_appearance(worker, show):
     """
     Inserts the specified worker and show pair into the appearances table.
     """
-    c.execute('''INSERT INTO appearances(worker_id, show_id)
+    c.execute('''INSERT OR IGNORE INTO appearances(worker_id, show_id)
                  VALUES(?,?)''', (worker.id, show.show_id))
     conn.commit()
 
@@ -150,23 +151,61 @@ def parse_workers(url):
     All these are added to the database
     :param url: the show URL or dictionary
     """
-    print(url)
-    raw_html = simple_get(url)
-    if raw_html is not None:
-        html = BeautifulSoup(raw_html, 'html.parser')
+    urls = get_urls(url)
 
-        show = parse_show_info(html, url)
+    shows = []
+    all_workers = []
+    for url in urls:
+        raw_html = simple_get(url)
+        if raw_html is not None:
+            html = BeautifulSoup(raw_html, 'html.parser')
+
+            show = parse_show_info(html, url)
+            shows.append(show)
+            if args.verbose:
+                print("Parsed show info {0}".format(show))
+
+            workers = parse_worker_list(html)
+            all_workers.extend(workers)
+
+    if len(shows) > 1:
         if args.verbose:
-            print("Parsed show info {0}".format(show))
+            print("Merging {0} shows".format(len(shows)))
+        show_names = []
+        show_ids = []
+        show_urls = []
+        for show in shows:
+            show_names.append(show.show_name)
+            show_ids.append(show.show_id)
+            show_urls.append(show.url)
+        name = '/'.join(show_names) + " Taping"
+        ids = "m" + ','.join(show_ids)
+        url_cs = ','.join(show_urls)
+        the_show = Show(ids, shows[0].arena, shows[0].date, name, shows[0].promotion, url_cs)
+    else:
+        the_show = shows[0]
 
-        add_promotion(show.promotion)
-        add_show(show)
+    add_promotion(the_show.promotion)
+    add_show(the_show)
+    for worker in all_workers:
+        add_worker(worker)
+        add_appearance(worker, the_show)
 
-        workers = parse_worker_list(html)
 
-        for worker in workers:
-            add_worker(worker)
-            add_appearance(worker, show)
+def get_urls(url):
+    """
+    Check if the URL is a dict. If so, return an array of the sub-items. If not, return an array containing just the
+    input url.
+    :param url: A URL str or a dict of URLs
+    :return: a list of urls
+    """
+    urls = []
+    if isinstance(url, dict):
+        if any([i in url for i in ['merge', 'taping', 'squash']]):
+            urls = url.get('merge') or url.get('taping') or url.get('squash')
+    else:
+        urls = [url]
+    return urls
 
 
 def parse_worker_list(html):
