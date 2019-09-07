@@ -273,7 +273,10 @@ def apply_translations(show_name):
     :param show_name: the input string to translate
     :return: the translated string
     """
-    return re.sub(r"(Tag)( [0-9]+)", r"Day\2", show_name)
+    if args.dntranslate:
+        return show_name
+    else:
+        return re.sub(r"(Tag)( [0-9]+)", r"Day\2", show_name)
 
 
 def parse_promotion_info(promotion_str):
@@ -325,6 +328,9 @@ if __name__ == "__main__":
                         default="shows.yaml")
     parser.add_argument("-v", "--verbose", dest="verbose",
                         help="output more info about what's being parsed",
+                        action="store_true")
+    parser.add_argument("-t", "--no-translations", dest="dntranslate",
+                        help="don't perform translations, e.g Tag -> Day in show names",
                         action="store_true")
     args = parser.parse_args()
 
