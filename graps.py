@@ -260,10 +260,20 @@ def parse_show_info(html, url):
     date_str = dictionary["Date:"].get_text()
     dd, mm, yy = date_str.split(".")
     date_obj = date(int(yy), int(mm), int(dd))
-    show_name = dictionary["Name of the event:"]
+    show_name = apply_translations(dictionary["Name of the event:"])
     promotion_str = dictionary["Promotion:"]
     promotion = parse_promotion_info(promotion_str)
     return Show(show_id, arena, date_obj, show_name, promotion, url)
+
+
+def apply_translations(show_name):
+    """
+    Apply the following translations to strings:
+      - 'Tag {x}' to 'Day {x}'
+    :param show_name: the input string to translate
+    :return: the translated string
+    """
+    return re.sub(r"(Tag)( [0-9]+)", r"Day\2", show_name)
 
 
 def parse_promotion_info(promotion_str):
