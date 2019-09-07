@@ -17,17 +17,20 @@
 # November 2009
 - https://www.cagematch.net/?id=1&nr=44909 # WWE DX Invasion Tour - Birmingham
 # April 2010
-- https://www.cagematch.net/?id=1&nr=50217 # WWE NXT #1.08
-- https://www.cagematch.net/?id=1&nr=50226 # WWE Friday Night SmackDown #556
+- taping:
+    - https://www.cagematch.net/?id=1&nr=50217 # WWE NXT #1.08
+    - https://www.cagematch.net/?id=1&nr=50226 # WWE Friday Night SmackDown #556
 ## - https://www.cagematch.net/?id=1&nr=50185 # WWE Superstars #53 : only one match of this show! how TF is this going to work
 # April 2012
 - https://www.cagematch.net/?id=1&nr=78192 # WWE Monday Night RAW #986
 ##- https://www.cagematch.net/?id=1&nr=78189 # WWE Superstars #158 : first 2 matches
 # April 2013
-- https://www.cagematch.net/?id=1&nr=94826 # WWE Monday Night RAW #1039
-- https://www.cagematch.net/?id=1&nr=95125 # WWE Superstars #211
-- https://www.cagematch.net/?id=1&nr=94859 # WWE Friday Night SmackDown #714
-- https://www.cagematch.net/?id=1&nr=94858 # WWE Main Event #30
+- taping:
+    - https://www.cagematch.net/?id=1&nr=94826 # WWE Monday Night RAW #1039
+    - https://www.cagematch.net/?id=1&nr=95125 # WWE Superstars #211
+- taping:
+    - https://www.cagematch.net/?id=1&nr=94859 # WWE Friday Night SmackDown #714
+    - https://www.cagematch.net/?id=1&nr=94858 # WWE Main Event #30
 # June 2013
 - https://www.cagematch.net/?id=1&nr=94731 # RevPro When Thunder Strikes
 # November 2013
@@ -35,8 +38,9 @@
 # March 2014
 - https://www.cagematch.net/?id=1&nr=104809 # RevPro High Stakes 2014
 # May 2014
-- https://www.cagematch.net/?id=1&nr=111347 # WWE Friday Night SmackDown #770
-- https://www.cagematch.net/?id=1&nr=111345 # WWE Main Event #86
+- taping:
+    - https://www.cagematch.net/?id=1&nr=111347 # WWE Friday Night SmackDown #770
+    - https://www.cagematch.net/?id=1&nr=111345 # WWE Main Event #86
 # June 2014
 - https://www.cagematch.net/?id=1&nr=108336 # RevPro Summer Sizzler 2014
 - https://www.cagematch.net/?id=1&nr=111317 # PROGRESS World Cup 2014
@@ -55,10 +59,11 @@
 - https://www.cagematch.net/?id=1&nr=121426 # PROGRESS ENDVR:8
 - https://www.cagematch.net/?id=1&nr=121427 # PROGRESS Chapter 17: Harder, Better, Faster, Stronger
 # February 2015
-##- https://www.cagematch.net/?id=1&nr=126979 # RevPro TV #1.01: merge
-##- https://www.cagematch.net/?id=1&nr=126980 # RevPro TV #1.02
-##- https://www.cagematch.net/?id=1&nr=127249 # RevPro TV #1.03
-##- https://www.cagematch.net/?id=1&nr=127389 # RevPro TV #1.04: merge
+- merge:
+    - https://www.cagematch.net/?id=1&nr=126979 # RevPro TV #1.01
+    - https://www.cagematch.net/?id=1&nr=126980 # RevPro TV #1.02
+    - https://www.cagematch.net/?id=1&nr=127249 # RevPro TV #1.03
+    - https://www.cagematch.net/?id=1&nr=127389 # RevPro TV #1.04
 # March 2015
 - https://www.cagematch.net/?id=1&nr=123853 # PROGRESS ENDVR:9
 - https://www.cagematch.net/?id=1&nr=121428 # PROGRESS Chapter 18: The Show We Can't Call PROGRESSleMania For Legal Reasons
@@ -68,10 +73,11 @@
 - https://www.cagematch.net/?id=1&nr=125782 # PROGRESS ENDVR:10
 ##- https://www.cagematch.net/?id=1&nr=123811 # ICW Insane Entertainment System Tour - Alex Kidd In London: Left during whippy
 # May 2015
-##- https://www.cagematch.net/?id=1&nr=129265 # RevPro TV #1.08: merge
-##- https://www.cagematch.net/?id=1&nr=129881 # RevPro TV #1.09
-##- https://www.cagematch.net/?id=1&nr=130380 # RevPro TV #1.10
-##- https://www.cagematch.net/?id=1&nr=127390 # RevPro TV #1.11: merge
+- merge:
+    - https://www.cagematch.net/?id=1&nr=129265 # RevPro TV #1.08: merge
+    - https://www.cagematch.net/?id=1&nr=129881 # RevPro TV #1.09
+    - https://www.cagematch.net/?id=1&nr=130380 # RevPro TV #1.10
+    - https://www.cagematch.net/?id=1&nr=127390 # RevPro TV #1.11: merge
 - https://www.cagematch.net/?id=1&nr=125781 # PROGRESS Chapter 19: Super Strong Style 16 Tournament Edition 2015 - Day 2
 # June 2015
 - https://www.cagematch.net/?id=1&nr=130650 # PROGRESS ENDVR:11
@@ -88,8 +94,9 @@
 # November 2015
 - https://www.cagematch.net/?id=1&nr=132957 # PROGRESS Chapter 23: What A Time To Be Alive!
 # December 2015
-- https://www.cagematch.net/?id=1&nr=136346 # NXT TakeOver: London
-- https://www.cagematch.net/?id=1&nr=143401 # NXT #176
+- taping:
+    - https://www.cagematch.net/?id=1&nr=136346 # NXT TakeOver: London
+    - https://www.cagematch.net/?id=1&nr=143401 # NXT #176
 # January 2016
 - https://www.cagematch.net/?id=1&nr=135775 # PROGRESS ENDVR:14
 - https://www.cagematch.net/?id=1&nr=138932 # RevPro High Stakes 2016
@@ -274,3 +281,4 @@
 - https://www.cagematch.net/?id=1&nr=216692 # Riptide Bank Holiday Wrestling - Show 1
 - https://www.cagematch.net/?id=1&nr=216694 # Riptide Bank Holiday Wrestling - Show 2
 - https://www.cagematch.net/?id=1&nr=231884 # NJPW Royal Quest
+# September 2019
