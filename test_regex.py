@@ -8,6 +8,8 @@ def test_one_off_regex():
     assert not_one_off("El Motho", "El Motho (w/Jinny)") is True, "Should match"
     assert not_one_off("El Motho", "El Motho defeats Gabriel Kidd") is True, "Should match"
     assert not_one_off("El Motho", "Gabriel Kidd defeats El Motho") is True, "Should match"
+    assert not_one_off("El Motho", "The Knucklelockers (Darrell Allen & El Motho) defeat The NIC (Charlie Carter & Oisin Delaney)") is True, "Should match"
+    assert not_one_off("El Motho", "The Knucklelockers (Darrell Allen & Jordon Breaks) defeat The NIC (Charlie Carter & El Motho)") is True, "Should match"
 
 
 def test_translation():

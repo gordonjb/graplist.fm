@@ -141,7 +141,7 @@ def not_one_off(worker_name, search):
     :param search: the match result to match against
     :return: True if the regex matches, in other words does not match the one off pattern
     """
-    return bool(re.search(worker_name + "(( \\(([c\\)]|[w\\/]))|( [^(])|$)", search))
+    return bool(re.search(worker_name + "(( \\(([c\\)]|[w\\/]))|( [^(])|$|\\))", search))
 
 
 def parse_workers(url):
