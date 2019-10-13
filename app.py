@@ -57,15 +57,18 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED])
 conn = sqlite3.connect('thedatabase.sqlite3', check_same_thread=False)
 c = conn.cursor()
 
-worker_count_query = "SELECT Count() FROM %s" % "workers"
+worker_count_query = "SELECT Count() FROM workers"
 c.execute(worker_count_query)
 worker_count = c.fetchone()[0]
-promotion_count_query = "SELECT Count() FROM %s" % "promotions"
+promotion_count_query = "SELECT Count() FROM promotions"
 c.execute(promotion_count_query)
 promotion_count = c.fetchone()[0]
-show_count_query = "SELECT Count() FROM %s" % "shows"
+show_count_query = "SELECT Count() FROM shows WHERE shows.is_partial < 2"
 c.execute(show_count_query)
 show_count = c.fetchone()[0]
+excluded_show_count_query = "SELECT Count() FROM shows WHERE shows.is_partial = 2"
+c.execute(excluded_show_count_query)
+excluded_show_count = c.fetchone()[0]
 
 appearances_df = pandas.read_sql_query('SELECT name, count(appearances.worker_id) AS \'appearances\' FROM appearances INNER JOIN workers on workers.worker_id = appearances.worker_id GROUP by appearances.worker_id  ORDER BY appearances DESC', conn)
 shows_df = pandas.read_sql_query('SELECT promotions.name, count(shows.promotion) AS \'att_shows\' FROM shows INNER JOIN promotions on promotions.promotion_id = shows.promotion GROUP by shows.promotion', conn)
@@ -115,6 +118,10 @@ if current_streak:
     streak_string = "You're on a " + str(latest_streak.count) + " month streak of at least one show per month!"
 
 longest_streak_string = "Your longest streak was " + str(longest_streak.count) + " months of at least one show per month, between " + str(longest_streak)
+
+excluded_shows_string = ""
+if excluded_show_count > 0:
+    excluded_shows_string = "(+" + str(excluded_show_count) + " partial shows excluded from count)"
 
 top_page_size = 10
 
@@ -281,7 +288,7 @@ body = dbc.Container(
                         html.H2("You've seen", style={'text-align': 'center'}),
                         html.H2(str(show_count), style={'text-align': 'center'}),
                         html.H2("shows!", style={'text-align': 'center'}),
-
+                        html.P(excluded_shows_string, style={'text-align': 'center', 'font-weight': 'bold'}),
                     ],
                 ),
                 dbc.Col(

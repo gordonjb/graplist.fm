@@ -1,0 +1,25 @@
+- taping:
+    - https://www.cagematch.net/?id=1&nr=50217 # WWE NXT #1.08
+    - https://www.cagematch.net/?id=1&nr=50226 # WWE Friday Night SmackDown #556
+    - partial:
+        url: https://www.cagematch.net/?id=1&nr=50185 # WWE Superstars #53 : only one match
+        exclude: [2,3]
+- https://www.cagematch.net/?id=1&nr=94731 # RevPro When Thunder Strikes
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=184094 # EVE SHEroes! : Had to leave after 3 matches
+    exclude: [4,5,6,7,8]
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=186937 # EVE Wrestle Queendom: left after one match
+    exclude: [2,3,4,5,6]
+    exclude_from_count: True
+- merge:
+    - partial:
+        url: https://www.cagematch.net/?id=1&nr=242611
+        exclude: [1] # Exclude match 1 with Martin Kirby, who is in a match on the other show, so should still appear
+    - https://www.cagematch.net/?id=1&nr=242612
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=239089
+    exclude: [5] # Match 5 contains KAI, but Match 3 features Kaito Ishida, will this conflict?
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=236880
+    exclude: [5] # Match 5 contains LA Park, but Match 4 features El Hijo de LA Park & LA Park Jr., will this conflict?
