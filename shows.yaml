@@ -20,10 +20,15 @@
 - taping:
     - https://www.cagematch.net/?id=1&nr=50217 # WWE NXT #1.08
     - https://www.cagematch.net/?id=1&nr=50226 # WWE Friday Night SmackDown #556
-## - https://www.cagematch.net/?id=1&nr=50185 # WWE Superstars #53 : only one match of this show! how TF is this going to work
+    - partial:
+        url: https://www.cagematch.net/?id=1&nr=50185 # WWE Superstars #53 : only one match
+        exclude: [2,3]
 # April 2012
-- https://www.cagematch.net/?id=1&nr=78192 # WWE Monday Night RAW #986
-##- https://www.cagematch.net/?id=1&nr=78189 # WWE Superstars #158 : first 2 matches
+- taping:
+    - https://www.cagematch.net/?id=1&nr=78192 # WWE Monday Night RAW #986
+    - partial:
+        url: https://www.cagematch.net/?id=1&nr=78189 # WWE Superstars #158 : first 2 matches
+        exclude: [3]
 # April 2013
 - taping:
     - https://www.cagematch.net/?id=1&nr=94826 # WWE Monday Night RAW #1039
@@ -69,15 +74,20 @@
 - https://www.cagematch.net/?id=1&nr=121428 # PROGRESS Chapter 18: The Show We Can't Call PROGRESSleMania For Legal Reasons
 # April 2015
 - https://www.cagematch.net/?id=1&nr=121110 # CHIKARA Afternoon Delight
-##- https://www.cagematch.net/?id=1&nr=127215 # Fight CLub Pro Enter CHIKARA - Part Three : Only saw the main event
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=127215 # Fight CLub Pro Enter CHIKARA - Part Three : Only saw the main event
+    exclude: [1,2,3]
+    exclude_from_count: True
 - https://www.cagematch.net/?id=1&nr=125782 # PROGRESS ENDVR:10
-##- https://www.cagematch.net/?id=1&nr=123811 # ICW Insane Entertainment System Tour - Alex Kidd In London: Left during whippy
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=123811 # ICW Insane Entertainment System Tour - Alex Kidd In London: Left during whippy
+    exclude: [6,7,8]
 # May 2015
 - merge:
-    - https://www.cagematch.net/?id=1&nr=129265 # RevPro TV #1.08: merge
+    - https://www.cagematch.net/?id=1&nr=129265 # RevPro TV #1.08
     - https://www.cagematch.net/?id=1&nr=129881 # RevPro TV #1.09
     - https://www.cagematch.net/?id=1&nr=130380 # RevPro TV #1.10
-    - https://www.cagematch.net/?id=1&nr=127390 # RevPro TV #1.11: merge
+    - https://www.cagematch.net/?id=1&nr=127390 # RevPro TV #1.11
 - https://www.cagematch.net/?id=1&nr=125781 # PROGRESS Chapter 19: Super Strong Style 16 Tournament Edition 2015 - Day 2
 # June 2015
 - https://www.cagematch.net/?id=1&nr=130650 # PROGRESS ENDVR:11
@@ -191,14 +201,22 @@
 # February 2018
 - https://www.cagematch.net/?id=1&nr=187571 # XWA 51: WrestleFriends: Equal Fights!
 # March 2018
-##- https://www.cagematch.net/?id=1&nr=184094 # EVE SHEroes! : Had to leave after 3 matches
-- https://www.cagematch.net/?id=1&nr=184357 # PROGRESS Chapter 65: Have Some Faith In The Sound : ## Missed the dark match
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=184094 # EVE SHEroes! : Had to leave after 3 matches
+    exclude: [4,5,6,7,8]
+    exclude_from_count: True
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=184357 # PROGRESS Chapter 65: Have Some Faith In The Sound : Missed the dark match
+    exclude: [1]
 - https://www.cagematch.net/?id=1&nr=194333 # EVE #SHEVOLUTION
 # April 2018
 - https://www.cagematch.net/?id=1&nr=177261 # FCP Dream Tag Team Invitational 2018 - Day 3
 # May 2018
 - https://www.cagematch.net/?id=1&nr=183999 # PROGRESS Chapter 68: Super Strong Style 16 Tournament Edition 2018 - Day 1
-## - https://www.cagematch.net/?id=1&nr=186937 # EVE Wrestle Queendom: left after one match
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=186937 # EVE Wrestle Queendom: left after one match
+    exclude: [2,3,4,5,6]
+    exclude_from_count: True
 - https://www.cagematch.net/?id=1&nr=184000 # PROGRESS Chapter 68: Super Strong Style 16 Tournament Edition 2018 - Day 2
 - https://www.cagematch.net/?id=1&nr=184001 # PROGRESS Chapter 68: Super Strong Style 16 Tournament Edition 2018 - Day 3
 - https://www.cagematch.net/?id=1&nr=190880 # RevPro Epic Encounter 2018
@@ -235,7 +253,7 @@
 # December 2018
 - https://www.cagematch.net/?id=1&nr=184105 # EVE Shevivor Series
 - https://www.cagematch.net/?id=1&nr=212727 # ATTACK! Under The Mistletour 2018 - Day 1
-## Head Drop: no Cagematch page
+- https://www.cagematch.net/?id=1&nr=243589 # Head Drop Live Pro Wrestling
 # January 2019
 - https://www.cagematch.net/?id=1&nr=220327 # RevPro Live At The Cockpit 37
 - https://www.cagematch.net/?id=1&nr=220538 # RevPro New Year's Resolution
@@ -251,14 +269,14 @@
 - https://www.cagematch.net/?id=1&nr=226471 # IWL Kingdom Come
 - https://www.cagematch.net/?id=1&nr=211117 # PROGRESS Chapter 87: Breadknife
 # April 2019
-- https://www.cagematch.net/?id=1&nr=216689 # Riptide Rumble 2019: ## Session Goth incorrectly added. This one might suck to fix.
+- https://www.cagematch.net/?id=1&nr=216689 # Riptide Rumble 2019
 - https://www.cagematch.net/?id=1&nr=224183 # ATTACK! Live At The Dome III
 - https://www.cagematch.net/?id=1&nr=225156 # EVE We're All Gonna Die! The Frantic Scramble In Search For Meaning Through A Mess Of Meaty Interactions: AKA The Kris Wolf Retirement Show
 # May 2019
 - https://www.cagematch.net/?id=1&nr=211119 # PROGRESS Chapter 88: Super Strong Style 16 Tournament Edition 2019 - Day 2
 - https://www.cagematch.net/?id=1&nr=211120 # PROGRESS Chapter 88: Super Strong Style 16 Tournament Edition 2019 - Day 3
 - https://www.cagematch.net/?id=1&nr=210997 # EVE She Persisted
-## Head Drop 2: no Cagematch page
+- https://www.cagematch.net/?id=1&nr=243591 # Head Drop The Return Of Live Pro Wrestling
 - https://www.cagematch.net/?id=1&nr=211121 # PROGRESS Chapter 89: 26th May 1988
 # June 2019
 - https://www.cagematch.net/?id=1&nr=229696 # Riptide Pride Of Brighton
@@ -270,7 +288,9 @@
 - https://www.cagematch.net/?id=1&nr=233144 # Southside The Day Before Tomorrow
 - https://www.cagematch.net/?id=1&nr=215314 # EVE Wrestle Queendom 2
 # July 2019
-##- https://www.cagematch.net/?id=1&nr=229677 # IWL Untitled 2 ## Missed first two matches
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=229677 # IWL Untitled 2: Missed first two matches
+    exclude: [1,2]
 - https://www.cagematch.net/?id=1&nr=226306 # Sendai Girls UK
 - https://www.cagematch.net/?id=1&nr=211123 # PROGRESS Chapter 93: Cheer Up Juice
 # August 2019
@@ -294,4 +314,7 @@
 - https://www.cagematch.net/?id=1&nr=236128 # wXw Femmes Fatales 2019
 - https://www.cagematch.net/?id=1&nr=236121 # wXw World Tag Team Festival 2019 - Day 2
 - https://www.cagematch.net/?id=1&nr=236129 # wXw AMBITION Wildcards Edition
-- https://www.cagematch.net/?id=1&nr=236122 # wXw World Tag Team Festival 2019 - Day 3
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=236122 # wXw World Tag Team Festival 2019 - Day 3
+    exclude: [1,2]
+- https://www.cagematch.net/?id=1&nr=230613 # Breed Pro Starrcave
