@@ -71,8 +71,8 @@ c.execute(excluded_show_count_query)
 excluded_show_count = c.fetchone()[0]
 
 appearances_df = pandas.read_sql_query('SELECT name, count(appearances.worker_id) AS \'appearances\' FROM appearances INNER JOIN workers on workers.worker_id = appearances.worker_id GROUP by appearances.worker_id  ORDER BY appearances DESC', conn)
-shows_df = pandas.read_sql_query('SELECT promotions.name, count(shows.promotion) AS \'att_shows\' FROM shows INNER JOIN promotions on promotions.promotion_id = shows.promotion GROUP by shows.promotion', conn)
-year_counter_df = pandas.read_sql_query('SELECT strftime(\'%Y\', show_date) AS show_year, count(show_id) AS show_count FROM shows GROUP BY show_year', conn)
+shows_df = pandas.read_sql_query('SELECT promotions.name, count(shows.promotion) AS \'att_shows\' FROM shows INNER JOIN promotions on promotions.promotion_id = shows.promotion WHERE shows.is_partial < 2 GROUP by shows.promotion', conn)
+year_counter_df = pandas.read_sql_query('SELECT strftime(\'%Y\', show_date) AS show_year, count(show_id) AS show_count FROM shows WHERE shows.is_partial < 2 GROUP BY show_year', conn)
 split_year_counter_df = pandas.read_sql_query('SELECT strftime(\'%Y\', show_date) AS show_year, promotions.name FROM shows INNER JOIN promotions on promotions.promotion_id = shows.promotion', conn)
 year_name_count_df = pandas.read_sql_query('SELECT strftime(\'%Y\', shows.show_date) AS show_year, promotions.name, count(promotions.promotion_id) AS show_count FROM shows INNER JOIN promotions on promotions.promotion_id = shows.promotion GROUP BY show_year, promotions.name', conn)
 shows_heatmap_df = pandas.read_sql_query('SELECT strftime(\'%m\', shows.show_date) AS show_month, strftime(\'%Y\', shows.show_date) AS show_year, COUNT(*) AS show_number FROM shows GROUP BY show_year, show_month ORDER BY show_year ASC, show_month ASC', conn)
