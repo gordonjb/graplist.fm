@@ -125,6 +125,8 @@ if excluded_show_count > 0:
 
 top_page_size = 10
 
+shows_heatmap, total_shows_heatmap = shows_heatmap()
+
 
 def shows_per_year_graph():
     return dcc.Graph(
@@ -212,6 +214,7 @@ def shows_heatmap():
     last_year = 0
     shows = []
     yr = [None] * 12
+    totals = []
     for i, r in shows_heatmap_df.iterrows():
         if int(r['show_year']) == last_year or last_year == 0:
             pass
@@ -247,9 +250,34 @@ def shows_heatmap():
                            showgrid=False),
                 xaxis=dict(showgrid=False)
     ))
+    
+    puts shows
+    puts years
+    
+    for year in shows:
+        totals.append(sum(year))
+    
+    fig_tot = _annotated_heatmap.create_annotated_heatmap(z=totals,
+                             y=years,
+                             x=['Totals'],
+                             xgap=5,
+                             ygap=5,
+                             hoverinfo="none",
+                             connectgaps=False,
+                             colorscale='Viridis')
+    fig_tot.layout.update(go.Layout(
+                yaxis=dict(autorange='reversed',
+                           tickmode='linear',
+                           showgrid=False),
+                xaxis=dict(showgrid=False)
+    ))
+    
     return dcc.Graph(
         id='shows-heatmap',
         figure=fig
+    ), dcc.Graph(
+        id='total-heatmap',
+        figure=fig_tot
     )
 
 
@@ -329,8 +357,15 @@ body = dbc.Container(
             [
                 dbc.Col(
                     [
-                        shows_heatmap(),
-                    ]
+                        shows_heatmap,
+                    ],
+                width=11
+                ),
+                dbc.Col(
+                    [
+                        total_shows_heatmap,
+                    ],
+                width=1
                 ),
             ]
         ),
