@@ -52,6 +52,145 @@ def is_streak_ongoing(streak):
         return False
 
 
+def shows_per_year_graph():
+    return dcc.Graph(
+        id='shows-per-year',
+        figure=go.Figure(
+            data=[go.Bar(x=year_counter_df['show_year'],
+                         y=year_counter_df['show_count'])],
+            layout=go.Layout(
+                title='Shows/year'
+            )
+        )
+    )
+
+
+def shows_per_year_stacked_graph():
+    return dcc.Graph(
+        id='shows-per-year-stacked',
+        figure=go.Figure(
+            data=shows_per_year_series,
+            layout=go.Layout(
+                title='Shows/year', barmode='stack'
+            )
+        )
+    )
+
+
+def shows_pie_chart():
+    return dcc.Graph(
+        id='shows-pie',
+        figure=go.Figure(
+            data=[go.Pie(labels=shows_df['name'],
+                         values=shows_df['att_shows'],
+                         textinfo="none")],
+            layout=go.Layout(
+                margin=dict(t=50)
+            )
+        ),
+        config={
+            'displayModeBar': False
+        }
+    )
+
+
+def appearances_pie_chart():
+    return dcc.Graph(
+        id='appearances-pie',
+        figure=go.Figure(
+            data=[go.Pie(labels=appearances_df['name'],
+                         values=appearances_df['appearances'])],
+            layout=go.Layout(
+                title='Appearances'
+            )
+        )
+    )
+
+
+def top_wrestlers_table():
+    return dash_table.DataTable(
+        id='top-wrestlers',
+        columns=[
+            {"name": i, "id": i} for i in appearances_df.columns
+        ],
+        page_current=0,
+        page_size=top_page_size,
+        page_action='custom'
+    )
+
+
+def top_promotions_table():
+    return dash_table.DataTable(
+        id='top-promotions',
+        columns=[
+            {"name": i, "id": i} for i in sorted(year_name_count_df.columns)
+        ],
+        page_current=0,
+        page_size=top_page_size,
+        page_action='custom'
+    )
+
+
+def get_shows_heatmap():
+    months = ['January', 'February', 'March', 'April', 'May', 'June',
+              'July', 'August', 'September', 'October', 'November', 'December', 'Total']
+    years = []
+    last_year = 0
+    shows = []
+    yr = [None] * 12
+    totals = []
+    for i, r in shows_heatmap_df.iterrows():
+        if int(r['show_year']) == last_year or last_year == 0:
+            pass
+        else:
+            shows.append(yr)
+            years.append(last_year)
+            new_year = int(r['show_year'])
+            last_year += 1
+            while last_year < new_year:
+                years.append(last_year)
+                shows.append([None] * 12)
+                last_year += 1
+            yr = [None] * 12
+
+        show_m_int = int(r['show_month'])
+        yr[(show_m_int - 1)] = r['show_number']
+        last_year = int(r['show_year'])
+    shows.append(yr)
+    years.append(last_year)
+
+    for year in shows:
+        year.append(sum(filter(None, year)))
+
+    fig = _annotated_heatmap.create_annotated_heatmap(z=shows,
+                                                      y=years,
+                                                      x=months,
+                                                      xgap=5,
+                                                      ygap=5,
+                                                      hoverinfo="none",
+                                                      connectgaps=False,
+                                                      colorscale='Viridis')
+    fig.layout.update(go.Layout(
+        title='Number of events per year and month',
+        yaxis=dict(autorange='reversed',
+                   tickmode='linear',
+                   showgrid=False),
+        xaxis=dict(showgrid=False),
+        margin=go.layout.Margin(
+            l=50,
+            r=50,
+            b=100,
+            t=100,
+            pad=4
+        )
+    ))
+
+    return dcc.Graph(
+        id='shows-heatmap',
+        figure=fig
+    )
+
+
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED])
 
 conn = sqlite3.connect('thedatabase.sqlite3', check_same_thread=False)
@@ -124,134 +263,6 @@ if excluded_show_count > 0:
     excluded_shows_string = "(+" + str(excluded_show_count) + " partial shows excluded from count)"
 
 top_page_size = 10
-
-
-def shows_per_year_graph():
-    return dcc.Graph(
-        id='shows-per-year',
-        figure=go.Figure(
-            data=[go.Bar(x=year_counter_df['show_year'],
-                         y=year_counter_df['show_count'])],
-            layout=go.Layout(
-                title='Shows/year'
-            )
-        )
-    )
-
-
-def shows_per_year_stacked_graph():
-    return dcc.Graph(
-        id='shows-per-year-stacked',
-        figure=go.Figure(
-            data=shows_per_year_series,
-            layout=go.Layout(
-                title='Shows/year', barmode='stack'
-            )
-        )
-    )
-
-
-def shows_pie_chart():
-    return dcc.Graph(
-        id='shows-pie',
-        figure=go.Figure(
-            data=[go.Pie(labels=shows_df['name'],
-                         values=shows_df['att_shows'],
-                         textinfo="none")],
-            layout=go.Layout(
-                margin=dict(t=50)
-            )
-        ),
-        config={
-            'displayModeBar': False
-        }
-    )
-
-
-def appearances_pie_chart():
-    return dcc.Graph(
-        id='appearances-pie',
-        figure=go.Figure(
-            data=[go.Pie(labels=appearances_df['name'],
-                         values=appearances_df['appearances'])],
-            layout=go.Layout(
-                title='Appearances'
-            )
-        )
-    )
-
-
-def top_wrestlers_table():
-    return dash_table.DataTable(
-        id='top-wrestlers',
-        columns=[
-            {"name": i, "id": i} for i in appearances_df.columns
-        ],
-        page_current=0,
-        page_size=top_page_size,
-        page_action='custom'
-)
-
-
-def top_promotions_table():
-    return dash_table.DataTable(
-        id='top-promotions',
-        columns=[
-            {"name": i, "id": i} for i in sorted(year_name_count_df.columns)
-        ],
-        page_current=0,
-        page_size=top_page_size,
-        page_action='custom'
-    )
-
-
-def shows_heatmap():
-    months = ['January', 'February', 'March', 'April', 'May', 'June',
-              'July', 'August', 'September', 'October', 'November', 'December']
-    years = []
-    last_year = 0
-    shows = []
-    yr = [None] * 12
-    for i, r in shows_heatmap_df.iterrows():
-        if int(r['show_year']) == last_year or last_year == 0:
-            pass
-        else:
-            shows.append(yr)
-            years.append(last_year)
-            new_year = int(r['show_year'])
-            last_year += 1
-            while last_year < new_year:
-                years.append(last_year)
-                shows.append([None] * 12)
-                last_year += 1
-            yr = [None] * 12
-
-        show_m_int = int(r['show_month'])
-        yr[(show_m_int - 1)] = r['show_number']
-        last_year = int(r['show_year'])
-    shows.append(yr)
-    years.append(last_year)
-
-    fig = _annotated_heatmap.create_annotated_heatmap(z=shows,
-                             y=years,
-                             x=months,
-                             xgap=5,
-                             ygap=5,
-                             hoverinfo="none",
-                             connectgaps=False,
-                             colorscale='Viridis')
-    fig.layout.update(go.Layout(
-                title='Number of events per year and month',
-                yaxis=dict(autorange='reversed',
-                           tickmode='linear',
-                           showgrid=False),
-                xaxis=dict(showgrid=False)
-    ))
-    return dcc.Graph(
-        id='shows-heatmap',
-        figure=fig
-    )
-
 
 navbar = dbc.NavbarSimple(
     children=[
@@ -329,9 +340,9 @@ body = dbc.Container(
             [
                 dbc.Col(
                     [
-                        shows_heatmap(),
-                    ]
-                ),
+                        get_shows_heatmap()
+                    ],
+                )
             ]
         ),
         dbc.Row(
