@@ -56,6 +56,12 @@ class Worker:
     name: str
 
 
+@dataclass
+class Match:
+    id: int
+    text: str
+
+
 def create_tables():
     c.execute('''
         CREATE TABLE "promotions" (
@@ -86,6 +92,21 @@ def create_tables():
             FOREIGN KEY ("worker_id") REFERENCES "workers" ("worker_id"),
             FOREIGN KEY ("show_id") REFERENCES "shows" ("show_id"),
             UNIQUE("worker_id", "show_id"));
+              ''')
+    c.execute('''
+        CREATE TABLE "matches" (
+            "match_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+            "match" TEXT,
+            "show_id" INTEGER,
+            FOREIGN KEY ("show_id") REFERENCES "shows" ("show_id"));
+              ''')
+    c.execute('''
+        CREATE TABLE "worker_matches" (
+            "worker_id" TEXT,
+            "match_id" INTEGER,
+            FOREIGN KEY ("worker_id") REFERENCES "workers" ("worker_id"),
+            FOREIGN KEY ("match_id") REFERENCES "matches" ("match_id"),
+            UNIQUE("worker_id", "match_id"));
               ''')
     conn.commit()
 
@@ -127,6 +148,25 @@ def add_appearance(worker, show):
     conn.commit()
 
 
+def add_match(match_text, show):
+    """
+    Inserts the specified match into the matches table.
+    """
+    new_id = c.execute('''INSERT OR IGNORE INTO matches(match, show_id)
+                 VALUES(?,?)''', (match_text, show.show_id)).lastrowid
+    conn.commit()
+    return new_id
+
+
+def add_worker_match(worker, match):
+    """
+    Inserts the specified worker's match into the worker_matches table.
+    """
+    c.execute('''INSERT OR IGNORE INTO worker_matches(worker_id, match_id)
+                 VALUES(?,?)''', (worker.id, match.id))
+    conn.commit()
+
+
 def validate_worker(worker_name, bs_html):
     """
     Perform checks against a plain text worker name by iterating over the MatchResults and performing tests on each
@@ -153,17 +193,7 @@ def filter_excluded(workers, exclude, bs_html):
     :param bs_html: the HTML as passed through BeautifulSoup
     :return: the workers list with wrestlers only in excluded matches removed
     """
-    exclude_matches = []
-    include_matches = []
-    divs = bs_html.find("div", {"class": "Matches"})
-    i = 1
-    for div in divs:
-        result = div.find("div", {"class": "MatchResults"})
-        if i in exclude:
-            exclude_matches.append(result)
-        else:
-            include_matches.append(result)
-        i = i + 1
+    exclude_matches, include_matches = get_exclude_include_matches(bs_html, exclude)
 
     if args.verbose:
         print("Excluding matches: {0}, Including matches: {1}".format(exclude_matches, include_matches))
@@ -198,6 +228,21 @@ def filter_excluded(workers, exclude, bs_html):
             newlist.append(worker)
         
     return newlist
+
+
+def get_exclude_include_matches(bs_html, exclude):
+    exclude_matches = []
+    include_matches = []
+    divs = bs_html.find("div", {"class": "Matches"})
+    i = 1
+    for div in divs:
+        result = div.find("div", {"class": "MatchResults"})
+        if i in exclude:
+            exclude_matches.append(result)
+        else:
+            include_matches.append(result)
+        i = i + 1
+    return exclude_matches, include_matches
 
 
 def not_one_off(worker_name, search):
@@ -269,6 +314,11 @@ def parse_workers(url):
     for worker in all_workers:
         add_worker(worker)
         add_appearance(worker, the_show)
+
+    for match in all_matches:
+        row_id = add_match(match.text, the_show)
+        match.id = row_id
+        add_worker_match(worker, match)
 
 
 def get_urls(url):
