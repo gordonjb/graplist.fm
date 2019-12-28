@@ -333,4 +333,7 @@
     exclude: [1]
 - https://www.cagematch.net/?id=1&nr=250041 # LLL New Dawn Rising
 # December 2019
-- https://www.cagematch.net/?id=1&nr=211007 # EVE Let's Get Shitfaced & Scream Into The Void: A Christmas Wrestling Spectacular
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=211007 # EVE Let's Get Shitfaced & Scream Into The Void: A Christmas Wrestling Spectacular
+    exclude: [6]
+- https://www.cagematch.net/?id=1&nr=249628 # ATTACK! Under The Mistletour 2019 - Day 1
