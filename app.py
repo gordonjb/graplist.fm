@@ -278,6 +278,13 @@ body = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
+                    html.H2("You've seen", style={'text-align': 'center'}),
+                )
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
                     [
                         html.H2(str(worker_count), style={'text-align': 'center'}),
                         html.H2("Wrestlers", style={'text-align': 'center'}),
@@ -285,7 +292,6 @@ body = dbc.Container(
                 ),
                 dbc.Col(
                     [
-                        html.H2("You've seen", style={'text-align': 'center'}),
                         html.H2(str(show_count), style={'text-align': 'center'}),
                         html.H2("shows!", style={'text-align': 'center'}),
                         html.P(excluded_shows_string, style={'text-align': 'center', 'font-weight': 'bold'}),

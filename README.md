@@ -44,7 +44,7 @@ sudo apt install python-pip
 pip install pipenv
 ```
 
-The list of Python dependencies used can be found in the [Pipfile](Pipfile) [or viewed on the repository's Dependencies page](https://github.com/gordonjb/graplist.fm/network/dependencies)
+The list of Python dependencies used can be found in the [Pipfile](Pipfile) or viewed on the repository's [Dependencies page](https://github.com/gordonjb/graplist.fm/network/dependencies)
 
 ## Shows list
 

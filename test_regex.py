@@ -4,12 +4,17 @@ from graps import not_one_off, apply_translations
 def test_one_off_regex():
     assert not_one_off("El Motho", "El Motho (Martina) & Martin Steers") is False, "Should not match"
     assert not_one_off("El Motho", "El Motho (c) defeats Gabriel Kidd") is True, "Should match"
+    assert not_one_off("El Motho", "Martina (El Motho) defeats Gabriel Kidd") is True, "Should match"
     assert not_one_off("El Motho", "El Motho (Charlie Carter, Oisin Delaney & The OJMO)") is False, "Should not match"
     assert not_one_off("El Motho", "El Motho (w/Jinny)") is True, "Should match"
     assert not_one_off("El Motho", "El Motho defeats Gabriel Kidd") is True, "Should match"
     assert not_one_off("El Motho", "Gabriel Kidd defeats El Motho") is True, "Should match"
     assert not_one_off("El Motho", "The Knucklelockers (Darrell Allen & El Motho) defeat The NIC (Charlie Carter & Oisin Delaney)") is True, "Should match"
     assert not_one_off("El Motho", "The Knucklelockers (Darrell Allen & Jordon Breaks) defeat The NIC (Charlie Carter & El Motho)") is True, "Should match"
+    assert not_one_off("El Motho", "Darrell Allen & Jordon Breaks defeat Charlie Carter & El Motho") is True, "Should match"
+    assert not_one_off("El Motho", "Darrell Allen & Jordon Breaks defeat El Motho & Charlie Carter") is True, "Should match"
+    assert not_one_off("El Motho", "Darrell Allen & El Motho defeat Charlie Carter & Jordon Breaks") is True, "Should match"
+    assert not_one_off("El Motho", "El Motho & Jordon Breaks defeat Charlie Carter & Darrell Allen") is True, "Should match"
 
 
 def test_translation():
