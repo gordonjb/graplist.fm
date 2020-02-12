@@ -346,9 +346,10 @@
 - https://www.cagematch.net/?id=1&nr=233117 # EVE Wrestle Queendom 3
 - https://www.cagematch.net/?id=1&nr=252492 # Schadenfreude & Friends 5
 - https://www.cagematch.net/?id=1&nr=252493 # Schadenfreude & Friends 6
-## TNT DOA 2020
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=254435 # TNT DOA Death Match Tournament 2020
+    exclude: [1] # Pre show VIP match
 # February 2020
 - https://www.cagematch.net/?id=1&nr=251642 # Good Wrestling #20: No Ring
 - https://www.cagematch.net/?id=1&nr=251816 # ATTACK! Awadama Fever
 - https://www.cagematch.net/?id=1&nr=250411 # SOUL 9: 1 Year Anniversary - In The Air Tonight
--
