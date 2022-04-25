@@ -365,3 +365,7 @@
 - partial:
     url: https://www.cagematch.net/?id=1&nr=334880 # PROGRESS Chapter 131: 10th Anniversary Show
     exclude: [1,2] # Missed first two matches
+# April 2022
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=341522 # EVE Global Women Strike 3
+    exclude: [7] # Had to leave as it was 11pm and eve was always like that
