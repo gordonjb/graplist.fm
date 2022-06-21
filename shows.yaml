@@ -369,3 +369,8 @@
 - partial:
     url: https://www.cagematch.net/?id=1&nr=341522 # EVE Global Women Strike 3
     exclude: [7] # Had to leave as it was 11pm and eve was always like that
+# June 2022
+- https://www.cagematch.net/?id=1&nr=338022 # EVE SHE-1 2022 - Day 1 Show 1
+- https://www.cagematch.net/?id=1&nr=338021 # EVE SHE-1 2022 - Day 1 Show 2
+- https://www.cagematch.net/?id=1&nr=338020 # EVE SHE-1 2022 - Day 2 Show 1
+- https://www.cagematch.net/?id=1&nr=338019 # EVE SHE-1 2022 - Day 2 Show 2
