@@ -376,3 +376,12 @@
 - https://www.cagematch.net/?id=1&nr=338019 # EVE SHE-1 2022 - Day 2 Show 2
 # September 2022
 - https://www.cagematch.net/?id=1&nr=350772 # EVE Thursday Night Riot
+- https://www.cagematch.net/?id=1&nr=347788 # PROGRESS Return Of The Fly
+# October 2022
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=349558 # NJPW Royal Quest II - Day 1
+    exclude: [1,2] # Missed first two matches
+- https://www.cagematch.net/?id=1&nr=349559 # NJPW Royal Quest II - Day 2
+# November 2022
+- https://www.cagematch.net/?id=1&nr=346559 # EVE Wrestle Queendom 5 - Show 1
+- https://www.cagematch.net/?id=1&nr=350773 # EVE Wrestle Queendom 5 - Show 2
