@@ -399,3 +399,24 @@
 - https://www.cagematch.net/?id=1&nr=377356 # EVE 113: SHE-1 '92 SPECIAL - The Final Rounds
 # November 2023
 - https://www.cagematch.net/?id=1&nr=377639 # EVE 114: Friday Night's Alright For Fightin
+# March 2024
+- https://www.cagematch.net/?id=1&nr=380411 # EVE 119: Beers, Brawls And Bad-Ass Bitches #IWD2024
+- https://www.cagematch.net/?id=1&nr=380410 # EVE 120: Women Behaving Badly #IWD2024
+# May 2024
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=389586 # RevPro/CMLL Fantastica Mania UK 2024 - Show 1
+    exclude: [1] # Missed first match
+- https://www.cagematch.net/?id=1&nr=389585 # RevPro/CMLL Fantastica Mania UK 2024 - Show 2
+# June 2024
+- https://www.cagematch.net/?id=1&nr=388734 # EVE 123: Once More, With Feeling
+# August 2024
+# Pro Wrestling CEASEFIRE
+- https://www.cagematch.net/?id=1&nr=398697 # Riot Cabaret ALL sINging All Dancing 2024
+- https://www.cagematch.net/?id=1&nr=399239 # ATTACK! ALL CAPS ALL DAY
+- https://www.cagematch.net/?id=1&nr=399818 # EVE x TJPW
+- partial:
+    url: https://www.cagematch.net/?id=1&nr=390465 # RevPro 12 Year Anniversary Show
+    exclude: [7] # Gabe Kidd piss break
+- squash:
+    - https://www.cagematch.net/?id=1&nr=401410 # AEW All In London 2024 - Zero Hour
+    - https://www.cagematch.net/?id=1&nr=374482 # AEW All In London 2024
